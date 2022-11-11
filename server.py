@@ -3,11 +3,11 @@ import threading
 
 # CONSTANTS
 SERVER = socket.gethostbyname(socket.gethostname())
-PORT = 5050
-ADDR = (SERVER, PORT)
+PORT = 18000
+# ADDR = (SERVER, PORT)
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(ADDR)
+server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server.bind(('', PORT))
 
 def clientActivity(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected")
@@ -19,7 +19,7 @@ def clientActivity(conn, addr):
     conn.close()
 
 def start():
-    server.listen()
+    # server.listen()
     while True:
         conn, addr = server.accept()
         thread = threading.Thread(target=clientActivity, args=(conn, addr))
