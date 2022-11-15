@@ -12,8 +12,6 @@ def send_message(clientSocket, msg):
     if type(msg) == dict:
         msg = json.dumps(msg).encode('utf-8')
         clientSocket.sendto(msg,(serverName, serverPort))
-        # modifiedMessage, serverAddress = clientSocket.recvfrom(2048)
-        # print(modifiedMessage.decode())
 
     else:
         clientSocket.sendto(str(msg).encode('base64','strict'),(serverName, serverPort))
@@ -47,7 +45,7 @@ def start():
         "TCP_SYN_FLAG": 1, 
         "TCP_ACK_FLAG": 0,
         "TCP_FIN_FLAG": 0,
-        "HTTP_GET_REQUEST": 1,
+        "HTTP_GET_REQUEST": 0,
         "HTTP_RESPONSE_STATUS_CODE": 0,
         "HTTP_CLIENT_VERSION": http_ver,
         "HTTP_REQUEST_PATH": 0,
@@ -55,7 +53,7 @@ def start():
 
         send_message(clientSocket, tcp_syn_msg)
 
-        print("sent a tcp syn message to the server!!!")
+        print("[Client] Sent a TCP SYN message to the server!!!")
 
         modifiedMessage, serverAddress = clientSocket.recvfrom(2048)
         # print(modifiedMessage.decode())
@@ -63,6 +61,35 @@ def start():
         b += modifiedMessage
         d = json.loads(b.decode('utf-8'))
         print(d)
+
+        # respond with a TCP ACK message here, now the client and server are in a TCP connection
+        tcp_ack_msg = {"PAYLOAD LENGTH": 0, 
+        "TCP_SYN_FLAG": 0, 
+        "TCP_ACK_FLAG": 1,
+        "TCP_FIN_FLAG": 0,
+        "HTTP_GET_REQUEST": 0,
+        "HTTP_RESPONSE_STATUS_CODE": 0,
+        "HTTP_CLIENT_VERSION": http_ver,
+        "HTTP_REQUEST_PATH": 0,
+        "HTTP_INCLUDED_OBJECT_PATH": 0}
+
+        send_message(clientSocket, tcp_ack_msg) 
+        print("[Client] Sent a TCP ACK message to the server...")
+        print("[Client] Client and Server are in a TCP connection now!!!")
+
+        # send a http get request
+        filename = input("What file are you looking for: ")
+        http_get = {"PAYLOAD LENGTH": 0, 
+        "TCP_SYN_FLAG": 0, 
+        "TCP_ACK_FLAG": 0,
+        "TCP_FIN_FLAG": 0,
+        "HTTP_GET_REQUEST": 1,
+        "HTTP_RESPONSE_STATUS_CODE": 0,
+        "HTTP_CLIENT_VERSION": http_ver,
+        "HTTP_REQUEST_PATH": "/attachments/"+filename+".html",
+        "HTTP_INCLUDED_OBJECT_PATH": 0}
+
+        send_message(clientSocket, http_get) 
 
     else:
         return
