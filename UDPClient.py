@@ -16,6 +16,7 @@ def send_message(clientSocket, msg):
     else:
         clientSocket.sendto(str(msg).encode('base64','strict'),(serverName, serverPort))
 
+#Show initial menu option
 def start():
     print("Choose one of the options from the menu:")
     print("1. Get a file from the server")
@@ -26,6 +27,8 @@ def start():
     b = b''
     c = b''
     e = b''
+    
+    #Select HTTP Version to use
     if message == "1":
         filename = input("Enter the location of your file: ")
         print("1. Use HTTP version 1.0 (non-persistent)")
@@ -37,7 +40,8 @@ def start():
             http_ver = 1.0
         else:
             http_ver = 1.1
-
+        
+        #Initiate TCP Connection with Server
         tcp_syn_msg = {"PAYLOAD LENGTH": 0, 
         "TCP_SYN_FLAG": 1, 
         "TCP_ACK_FLAG": 0,
@@ -133,7 +137,8 @@ def start():
 
             print("[Client] Contents of your file are as follows:")
             print(d["CONTENTS"])
-
+            
+            #file contains a link to another object so, open path to other object
             if d["HTTP_INCLUDED_OBJECT_PATH"] != "":
                 file = open(d["HTTP_INCLUDED_OBJECT_PATH"], mode='r')
                 file_contents = file.read()
@@ -153,8 +158,3 @@ def start():
 if __name__ == '__main__':
     while True:
         start()
-
-
-    
-
-    
