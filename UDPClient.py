@@ -56,7 +56,6 @@ def start():
 
         b += modifiedMessage
         d = json.loads(b.decode('utf-8'))
-        print(d)
 
         # respond with a TCP ACK message here, now the client and server are in a TCP connection
         tcp_ack_msg = {"PAYLOAD LENGTH": 0, 
@@ -123,9 +122,9 @@ def start():
             "HTTP_REQUEST_PATH": filename,
             "HTTP_INCLUDED_OBJECT_PATH": 0}
             send_message(clientSocket, tcp_ack_msg)
-
+            print("[Client] Closing the TCP connection!!!")
             # show the first menu now
-            return
+            return False
 
         # if status code is 200, display page is found
         else:
@@ -147,12 +146,16 @@ def start():
             print(original)
             target = "/Users/anishdhandore/Documents/CSUSM/Courses /7 Fall 2022/CS 436/FinalProject_Networking/Client"
             shutil.copy(original, target)
+
+            return True
     else:
-        return
+        return True
 
 if __name__ == '__main__':
     while True:
-        start()
+        if not start():
+            break
+
 
 
     
