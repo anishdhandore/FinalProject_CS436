@@ -158,15 +158,5 @@ def start():
 
 if __name__ == '__main__':
     while True:
-<<<<<<< HEAD
         if not start():
             break
-
-
-
-    
-
-    
-=======
-        start()
->>>>>>> 75fa59e1cd5113d76843dbf9640f04562f744e46
