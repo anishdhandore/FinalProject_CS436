@@ -19,7 +19,10 @@ while True:
     b += firstmessage
     d = json.loads(b.decode('utf-8'))
 
+    #Use HTTP version desired by client
     http_ver = d["HTTP_CLIENT_VERSION"]
+
+    #Initiate TCP connection with client
     if firstmessage:
         tcp_syn_msg = {"PAYLOAD LENGTH": 0, 
         "TCP_SYN_FLAG": 1, 
